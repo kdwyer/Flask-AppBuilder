@@ -641,7 +641,6 @@ class AuthOAuthView(AuthView):
             )
         else:
             log.debug("Going to call authorize for: {0}".format(provider))
-            log.error()
             state = jwt.encode(
                 request.args.to_dict(flat=False),
                 self.appbuilder.app.config["SECRET_KEY"],
