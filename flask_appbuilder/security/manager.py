@@ -529,12 +529,12 @@ class BaseSecurityManager(AbstractSecurityManager):
         # for Google
         if provider == "google":
             me = self.appbuilder.sm.oauth_remotes[provider].get("userinfo")
-            log.debug("User info from Google: {0}".format(me.data))
+            log.debug("User info from Google: {0}".format(me.json()))
             return {
-                "username": "google_" + me.data.get("id", ""),
-                "first_name": me.data.get("given_name", ""),
-                "last_name": me.data.get("family_name", ""),
-                "email": me.data.get("email", ""),
+                "username": "google_" + me.json().get("id", ""),
+                "first_name": me.json().get("given_name", ""),
+                "last_name": me.json().get("family_name", ""),
+                "email": me.json().get("email", ""),
             }
         # for Azure AD Tenant. Azure OAuth response contains
         # JWT token which has user info.
