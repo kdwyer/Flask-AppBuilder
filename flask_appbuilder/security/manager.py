@@ -246,7 +246,7 @@ class BaseSecurityManager(AbstractSecurityManager):
         if self.auth_type == AUTH_OID:
             self.oid = OpenID(app)
         if self.auth_type == AUTH_OAUTH:
-            from flask_oauthlib.client import OAuth
+            from authlib.integrations.flask_client import OAuth
 
             self.oauth = OAuth()
             self.oauth_remotes = dict()
