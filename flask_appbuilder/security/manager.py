@@ -248,7 +248,7 @@ class BaseSecurityManager(AbstractSecurityManager):
         if self.auth_type == AUTH_OAUTH:
             from authlib.integrations.flask_client import OAuth
 
-            self.oauth = OAuth()
+            self.oauth = OAuth(app)
             self.oauth_remotes = dict()
             for _provider in self.oauth_providers:
                 provider_name = _provider["name"]
