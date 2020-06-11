@@ -1006,11 +1006,12 @@ class BaseSecurityManager(AbstractSecurityManager):
             :userinfo: dict with user information the keys have the same name
             as User model columns.
         """
+        user = None
         if "username" in userinfo:
             user = self.find_user(username=userinfo["username"])
-        elif "email" in userinfo:
+        if user is None and "email" in userinfo:
             user = self.find_user(email=userinfo["email"])
-        else:
+        if user is None:
             log.error("User info does not have username or email {0}".format(userinfo))
             return None
         # User is disabled
@@ -1032,6 +1033,13 @@ class BaseSecurityManager(AbstractSecurityManager):
             if not user:
                 log.error("Error creating a new OAuth user %s" % userinfo["username"])
                 return None
+        else:
+            # Not sure if we want to do this?
+            attrnames = ['username', 'first_name', 'last_name']
+            for attrname in attrnames:
+                new = userinfo.get(attrname)
+                if new and getattr(user, attrname) != new:
+                    setattr(user, attrname, new)
         self.update_user_auth_stat(user)
         return user
 
