@@ -56,6 +56,7 @@ from ..const import (
 )
 
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 
 class AbstractSecurityManager(BaseManager):
@@ -1006,11 +1007,14 @@ class BaseSecurityManager(AbstractSecurityManager):
             :userinfo: dict with user information the keys have the same name
             as User model columns.
         """
+        log.debug('Userinfo: %r', userinfo)
         user = None
         if "username" in userinfo:
+            log.debug('Username match %s', user)
             user = self.find_user(username=userinfo["username"])
         if user is None and "email" in userinfo:
             user = self.find_user(email=userinfo["email"])
+            log.debug('Email match %s', user)
         if user is None:
             log.error("User info does not have username or email {0}".format(userinfo))
             return None
@@ -1034,12 +1038,14 @@ class BaseSecurityManager(AbstractSecurityManager):
                 log.error("Error creating a new OAuth user %s" % userinfo["username"])
                 return None
         else:
+            log.debug('Updating user')
             # Not sure if we want to do this?
             attrnames = ['username', 'first_name', 'last_name']
             for attrname in attrnames:
                 new = userinfo.get(attrname)
                 if new and getattr(user, attrname) != new:
                     setattr(user, attrname, new)
+        log.debug('Final user %s', user)
         self.update_user_auth_stat(user)
         return user
 
